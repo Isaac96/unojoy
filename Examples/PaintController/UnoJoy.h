@@ -90,9 +90,6 @@
     //  It sets up the hardware UnoJoy needs to work properly
     void setupUnoJoy(void);
     
-    // You can also call the set
-    void setupUnoJoy(int);
-    
     // This sets the controller to reflect the button and
     // joystick positions you input (as a dataForController_t).
     // The controller will just send a zeroed (joysticks centered)
@@ -107,6 +104,17 @@
     // It returns a dataForController_t, so you want to call it like:
     //    myControllerData = getBlankDataForController();
     dataForController_t getBlankDataForController(void);
+    
+    // You can also call the setup function with an integer argument
+    //  declaring how often, in  milliseconds, the buffer should send its data 
+    //  via the serial port.  Use it if you need to do a lot of processing and
+    //  the serial stuff is messing you up, but it'll make your controller
+    //  more laggy.
+    // IMPORTANT - you can't make this value greater than 20 or so - the code
+    //  on the communications chip times out on each serial read after 25ms.
+    //  If you need more time than 20ms, you'll have to alter the code for the
+    //  ATmega8u2 as well
+    void setupUnoJoy(int);
     
     
 //----- End of the interface code you should be using -----//

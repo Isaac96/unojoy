@@ -5,47 +5,63 @@
 */
 #include "UnoJoy.h"
 
+int PressCutoff = 10;
+int ReleaseCutoff = 1;
+
 // We define our pins here
-#define UP_PIN 2
-#define RIGHT_PIN 11
-#define LEFT_PIN 3
-#define DOWN_PIN 10
-#define SQUARE_PIN 4
-#define TRIANGLE_PIN 5
-#define CIRCLE_PIN 9
-#define CROSS_PIN 8
+#define UP_PIN 11
+#define RIGHT_PIN 8
+#define LEFT_PIN 7
+#define DOWN_PIN 4
+#define SQUARE_PIN 9
+#define TRIANGLE_PIN 12
+#define CIRCLE_PIN 2
+#define CROSS_PIN 10
+#define L1_PIN 6
+#define L2_PIN 5
+#define R1_PIN 3
+#define R2_PIN 2
 
 
 #define START_PIN 6
 #define HOME_PIN 7
 
 // This array just helps us set our pins easily
-#define NUMBER_OF_INPUTS 10
+#define NUMBER_OF_INPUTS 12
 int pinArray[NUMBER_OF_INPUTS] = {UP_PIN, RIGHT_PIN, LEFT_PIN, DOWN_PIN,
                    TRIANGLE_PIN, CIRCLE_PIN, SQUARE_PIN, CROSS_PIN,
-                   START_PIN, HOME_PIN};
+                   START_PIN, HOME_PIN, L1_PIN, R1_PIN};
                    
 // This stores the baseline cutoff value for the
 //  capacitive sensors on each pin
 int baselineArray[20];
 
+int lastPinValues[20];
+dataForController_t ControllerData;
+
 void setup(){
+  ControllerData = getBlankDataForController();
   setupUnoJoy();
   // Give things a chance to settle after power-up
-  delay(20);
+  delay(200);
   // This function establishes the baseline reading
   //  for each capacitive sensor, effectively calibrating it
   setupBaselines();
+  for (int i = 0; i < 20; i++){
+    lastPinValues[i] = baselineArray[i];
+  }
 }
 
 void loop(){
   // Always be getting fresh data
-  dataForController_t controllerData = getControllerData();
-  setControllerData(controllerData);
-  if ((millis() % 500) < 5){
-    refreshBaselines();
-    delay(5);
-  }
+  getControllerData();
+  setControllerData(ControllerData);
+  delay(100);
+  //if ((millis() % 250) < 5){
+  //  refreshBaselines(40);
+  //  delay(5);
+  //printPins();
+  //}
 }
 
 // This function reads an average of each capacitive pin,
@@ -60,9 +76,9 @@ void setupBaselines(void){
 
 void refreshBaselines(int cutoff){
   for (byte i = 0; i < NUMBER_OF_INPUTS; i++){
-    int baseReading = calibrateCapacitivePin(pinArray[i]);
+    int baseReading = readCapacitivePinModified(pinArray[i]);
     int newValue = baseReading + (baseReading / 4);
-    if ((newValue - baselineArray[pinArray[i]) < cutoff)
+    if ((newValue - baselineArray[pinArray[i]]) < cutoff)
       baselineArray[pinArray[i]] = newValue;
   }
 }
@@ -83,41 +99,44 @@ int calibrateCapacitivePin(int pinNumber){
   delay(10);
 }
 
+int readPin(int pin, int previousValue){
+  int returnValue = previousValue;
+  int reading = 0;
+  int reading2 = 0;
+  int reading3 = 0;
+  int reading4 = 0;
+  // Compare the reading of each capacitive pin to the cutoff we
+  // established at the start
+  reading = readCapacitivePinModified(pin) / 4;
+  reading2 = readCapacitivePinModified(pin) / 4;
+  reading3 = readCapacitivePinModified(pin) / 4;
+  reading4 = readCapacitivePinModified(pin) / 4;
+  reading = reading + reading2 + reading3 + reading4;
+  if (reading > (lastPinValues[pin] + PressCutoff))
+    returnValue = 1;
+  else if (reading < (lastPinValues[pin] - ReleaseCutoff))
+    returnValue = 0;
+  lastPinValues[pin] = reading;
+  return returnValue;
+}
+
 // This function reads each of the capacitive pins, and if
 //  the value is over the cutoff for a touch, assigns the
 //  appropriate button as pressed.
-dataForController_t getControllerData(void){
-  // Set up a place for our controller data
-  dataForController_t controllerData = getBlankDataForController();
- 
-  // Compare the reading of each capacitive pin to the cutoff we
-  // established at the start
-  if (readCapacitivePinModified(DOWN_PIN) > baselineArray[DOWN_PIN])
-    controllerData.dpadDownOn = 1;
-
-  if (readCapacitivePinModified(UP_PIN) > baselineArray[UP_PIN])
-    controllerData.dpadUpOn = 1;
-    
-  if (readCapacitivePinModified(LEFT_PIN) > baselineArray[LEFT_PIN])
-    controllerData.dpadLeftOn = 1;
-    
-  if (readCapacitivePinModified(RIGHT_PIN) > baselineArray[RIGHT_PIN])
-    controllerData.dpadRightOn = 1;
-    
-  if (readCapacitivePinModified(SQUARE_PIN) > baselineArray[SQUARE_PIN])
-    controllerData.squareOn = 1;
-    
-  if (readCapacitivePinModified(TRIANGLE_PIN) > baselineArray[TRIANGLE_PIN])
-    controllerData.triangleOn = 1;
-    
-  if (readCapacitivePinModified(CIRCLE_PIN) > baselineArray[CIRCLE_PIN])
-    controllerData.circleOn = 1;
+void getControllerData(void){
   
-  if (readCapacitivePinModified(CROSS_PIN) > baselineArray[CROSS_PIN])
-    controllerData.crossOn = 1;
-    
-  // And return the data!
-  return controllerData;
+  ControllerData.dpadDownOn = readPin(DOWN_PIN, ControllerData.dpadDownOn);
+  ControllerData.dpadUpOn = readPin(UP_PIN, ControllerData.dpadUpOn);
+  ControllerData.dpadLeftOn = readPin(LEFT_PIN, ControllerData.dpadLeftOn);
+  ControllerData.dpadRightOn = readPin(RIGHT_PIN, ControllerData.dpadRightOn);
+  ControllerData.circleOn = readPin(CIRCLE_PIN, ControllerData.circleOn);
+  ControllerData.crossOn = readPin(CROSS_PIN, ControllerData.crossOn);
+  ControllerData.triangleOn = readPin(TRIANGLE_PIN, ControllerData.triangleOn);
+  ControllerData.squareOn = readPin(SQUARE_PIN, ControllerData.squareOn);
+  ControllerData.l1On = readPin(L1_PIN, ControllerData.l1On);
+  ControllerData.r1On = readPin(R1_PIN, ControllerData.r1On);
+  
+  return;
 }
 
 
@@ -129,7 +148,7 @@ dataForController_t getControllerData(void){
 //  attached to it, the number will get higher
 //  In order for this to work now,
 //  THE PIN MUST HAVE A BEEFY PULL-UP RESISTOR
-uint8_t readCapacitivePinModified(int pinToMeasure){
+int readCapacitivePinModified(int pinToMeasure){
   // This is how you declare a variable which
   //  will hold the PORT, PIN, and DDR registers
   //  on an AVR
@@ -188,21 +207,52 @@ uint8_t readCapacitivePinModified(int pinToMeasure){
 // This is a debugging function to easily see what
 //  values the pins are returning.
 void printPins(){
-  Serial.print("2: ");
+  Serial.print("Baseline: ");
+  Serial.print(baselineArray[2]);
+  Serial.print("   2: ");
   Serial.println(readCapacitivePinModified(2));
-  Serial.print("3: ");
+  Serial.print("Baseline: ");
+  Serial.print(baselineArray[3]);
+  Serial.print("   3: ");
   Serial.println(readCapacitivePinModified(3));
-  Serial.print("4: ");
+  Serial.print("Baseline: ");
+  Serial.print(baselineArray[4]);
+  Serial.print("   4: ");
   Serial.println(readCapacitivePinModified(4));
-  Serial.print("5: ");
+  Serial.print("Baseline: ");
+  Serial.print(baselineArray[5]);
+  Serial.print("   5: ");
   Serial.println(readCapacitivePinModified(5));
-  Serial.print("9: ");
+  
+  Serial.print("Baseline: ");
+  Serial.print(baselineArray[6]);
+  Serial.print("   6: ");
+  Serial.println(readCapacitivePinModified(6));
+  
+  Serial.print("Baseline: ");
+  Serial.print(baselineArray[7]);
+  Serial.print("   7: ");
+  Serial.println(readCapacitivePinModified(7));
+  
+  Serial.print("Baseline: ");
+  Serial.print(baselineArray[8]);
+  Serial.print("   8: ");
+  Serial.println(readCapacitivePinModified(8));
+  Serial.print("Baseline: ");
+  Serial.print(baselineArray[9]);
+  Serial.print("   9: ");
   Serial.println(readCapacitivePinModified(9));
-  Serial.print("10: ");
+  Serial.print("Baseline: ");
+  Serial.print(baselineArray[10]);
+  Serial.print("   10: ");
   Serial.println(readCapacitivePinModified(10));
-  Serial.print("11: ");
+  Serial.print("Baseline: ");
+  Serial.print(baselineArray[11]);
+  Serial.print("   11: ");
   Serial.println(readCapacitivePinModified(11));
-  Serial.print("12: ");
+  Serial.print("Baseline: ");
+  Serial.print(baselineArray[12]);
+  Serial.print("   12: ");
   Serial.println(readCapacitivePinModified(12));
   Serial.println();
 }

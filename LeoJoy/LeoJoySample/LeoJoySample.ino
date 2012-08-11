@@ -1,4 +1,3 @@
-
 /*
   LeoJoy Sample Code
   Alan Chatham - 2012
@@ -15,8 +14,6 @@
  
  This code is in the public domain
  */
-
-#define JOYSTICK_ENABLED
 
 void setup(){
   setupPins();
