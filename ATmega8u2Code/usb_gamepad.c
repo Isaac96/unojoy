@@ -284,7 +284,7 @@ static const gamepad_state_t PROGMEM gamepad_idle_state = {
 	.select_btn = 0, .start_btn = 0, .l3_btn = 0, .r3_btn = 0, .ps_btn = 0,
 	.direction = 0x08,
 	.l_x_axis = 0x80, .l_y_axis = 0x80, .r_x_axis = 0x80, .r_y_axis = 0x80,
-	.unknown = {0x00, 0x00, 0x00, 0x00},
+	.up_axis = 0x00, .right_axis = 0x00, .down_axis = 0x00, .left_axis = 0x00,
 	.circle_axis = 0x00, .cross_axis = 0x00, .square_axis = 0x00, .triangle_axis = 0x00,
 	.l1_axis = 0x00, .r1_axis = 0x00, .l2_axis = 0x00, .r2_axis = 0x00
 };
@@ -444,6 +444,25 @@ int8_t sendPS3Data(dataForController_t btnList){
 	else if (btnList.dpadRightOn == 1){
 		gamepad_state.direction = 2;
 	}
+	
+	// Take care of the d-pad analog pressures separately,
+	//  since the 'convert to hat switch' code is confusing
+	if (btnList.dpadUpOn == 1)
+		gamepad_state.up_axis = 0xFF;	
+	else
+		gamepad_state.up_axis = 0;
+	if (btnList.dpadRightOn == 1)
+		gamepad_state.right_axis = 0xFF;
+	else
+		gamepad_state.right_axis = 0;
+	if (btnList.dpadDownOn == 1)
+		gamepad_state.down_axis = 0xFF;
+	else
+		gamepad_state.down_axis = 0;
+	if (btnList.dpadLeftOn == 1)
+		gamepad_state.left_axis = 0xFF;
+	else
+		gamepad_state.left_axis = 0;
 			
 
 	// left and right analog sticks, 0x00 left/up, 0x80 middle, 0xff right/down
