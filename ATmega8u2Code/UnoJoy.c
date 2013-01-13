@@ -107,6 +107,13 @@ void serialWrite( unsigned char data )
 	UDR1 = data;
 }
 
+void flushSerialRead()
+{
+	unsigned char dummy;
+	while ( UCSR1A & (1<<RXC1) )
+		dummy = UDR1;
+}
+
 // This turns on one of the LEDs hooked up to the chip
 void LEDon(char ledNumber){
 	DDRD |= 1 << ledNumber;
@@ -145,7 +152,7 @@ int main(void) {
 	// and do whatever it does to actually be ready for input
 	// This wait also gives the Arduino bootloader time to timeout,
 	//  so the serial data you'll be properly aligned.
-	//_delay_ms(500);
+	_delay_ms(500);
 	dataForController_t dataToSend;
 	char buttonData1;
 	char buttonData2;
@@ -162,9 +169,10 @@ int main(void) {
         //  number is a timeout (in ms) so if there's a transmission error,
         //  we don't stall forever.
 		LEDon(TXLED);
+		flushSerialRead();
 		serialWrite(0);
 		buttonData1 = serialRead(25);
-        
+		       
 		serialWrite(1);
 		buttonData2 = serialRead(25);
         
