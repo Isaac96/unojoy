@@ -64,14 +64,14 @@ void setControllersToZero(void){
 	dataForMegaController_t emptyData;
 	for (int i = 0; i < BUTTON_ARRAY_LENGTH; i++)
 		emptyData.buttonArray[i] = 0;
-	emptyData.leftStickX = 128;
-	emptyData.leftStickY = 128;
-	emptyData.rightStickX = 128;
-	emptyData.rightStickY = 128;
-	emptyData.stick3X = 128;
-	emptyData.stick3Y = 128;
-	sendControllerDataViaUSB(emptyData, 0);
-	sendControllerDataViaUSB(emptyData, 1);
+	emptyData.leftStickX = 512;
+	emptyData.leftStickY = 512;
+//	emptyData.rightStickX = 512;
+//	emptyData.rightStickY = 512;
+//	emptyData.stick3X = 512;
+//	emptyData.stick3Y = 512;
+	//sendControllerDataViaUSB(emptyData, 0);
+	//sendControllerDataViaUSB(emptyData, 1);
 }
 
 // Initializes the USART to receive and transmit,
@@ -174,42 +174,31 @@ int main(void) {
 		flushSerialRead();
 		
 		for (int i = 0; i < BUTTON_ARRAY_LENGTH; i++){
-			dataToSend.buttonArray[i] = 0;	
+			serialWrite(i);
+			dataToSend.buttonArray[i] = serialRead(25);	
 		}
-		//for (int i = 3; i < 6; i++){
-		//	serialWrite(i);
-		//	dataToSend.buttonArray[i] = serialRead(25);
-		//}			
-		serialWrite(0);
-		dataToSend.buttonArray[0] = serialRead(25);
 		
-		serialWrite(1);
-		dataToSend.buttonArray[4] = serialRead(25);
+		serialWrite(BUTTON_ARRAY_LENGTH);
+		uint8_t directionButtons = serialRead(25);
+		//dataToSend.dpadDownOn = 
 		
-		serialWrite(2);
-		dataToSend.buttonArray[3] = serialRead(25);
-		
-		serialWrite(3);
-		//serialWrite(BUTTON_ARRAY_LENGTH);
+		serialWrite(BUTTON_ARRAY_LENGTH + 1);
 		dataToSend.leftStickX = serialRead(25);
         
-		serialWrite(4);
-		//serialWrite(BUTTON_ARRAY_LENGTH + 1);
+		serialWrite(BUTTON_ARRAY_LENGTH + 2);
 		dataToSend.leftStickY = serialRead(25);
         
-		serialWrite(5);
-		//serialWrite(BUTTON_ARRAY_LENGTH + 2);
+		serialWrite(BUTTON_ARRAY_LENGTH + 3);
 		dataToSend.rightStickX = serialRead(25);
         
-		//serialWrite(BUTTON_ARRAY_LENGTH + 3);
-		serialWrite(6);
+		serialWrite(BUTTON_ARRAY_LENGTH + 4);
 		dataToSend.rightStickY= serialRead(25);
 		
 		// FIX THESE LATER TO ACTUALLY READ IN THE DATA
-		serialWrite(5);
+		serialWrite(BUTTON_ARRAY_LENGTH + 5);
 		dataToSend.stick3X= serialRead(25);
 		
-		serialWrite(6);
+		serialWrite(BUTTON_ARRAY_LENGTH + 6);
 		dataToSend.stick3Y= serialRead(25);
 		
 		// Communication with the Arduino chip is over here

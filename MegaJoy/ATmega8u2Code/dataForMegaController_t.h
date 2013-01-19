@@ -44,12 +44,12 @@
 		uint8_t : 4; // Padding, just to make our current system work nicely
 
 		
-		uint8_t leftStickX : 8; 
-		uint8_t leftStickY : 8;
-		uint8_t rightStickX : 8;
-		uint8_t rightStickY : 8;
-		uint8_t stick3X : 8;
-		uint8_t stick3Y : 8;
+		int16_t leftStickX; 
+		int16_t leftStickY;
+		int16_t rightStickX;
+		int16_t rightStickY;
+		int16_t stick3X;
+		int16_t stick3Y;
 	} dataForMegaController_t;
 
 

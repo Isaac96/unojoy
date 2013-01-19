@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <util/delay.h>
 #include "dataForMegaController_t.h"
-
 // Timeout in ms for the USB communication to start during initialization
 #define USB_TIMEOUT 1000
 
@@ -46,12 +45,12 @@ typedef struct {
 
 	// left and right analog sticks, 0x00 left/up, 0x80 middle, 0xff right/down
 
-	uint8_t l_x_axis;
-	uint8_t l_y_axis;
-	uint8_t r_x_axis;
-	uint8_t r_y_axis;
-	uint8_t x_3_axis;
-	uint8_t y_3_axis;
+	int16_t l_x_axis;
+	int16_t l_y_axis;
+	int16_t r_x_axis;
+	int16_t r_y_axis;
+	int16_t x_3_axis;
+	int16_t y_3_axis;
 
 	// Gonna assume these are button analog values for the d-pad.
 	// NOTE: NOT EVEN SURE THIS IS RIGHT, OR IN THE CORRECT ORDER

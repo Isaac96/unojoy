@@ -138,13 +138,11 @@ static const uint8_t PROGMEM gamepad_hid_report_desc[] = {
 	0x35, 0x00,        //   PHYSICAL_MINIMUM (0)
 	0x45, 0x01,        //   PHYSICAL_MAXIMUM (1)
 	0x75, 0x01,        //   REPORT_SIZE (1)
-	0x95, 8 * BUTTON_ARRAY_LENGTH,        //   REPORT_COUNT (144)
+	0x95, 8 * BUTTON_ARRAY_LENGTH,        //   REPORT_COUNT (32)
 	0x05, 0x09,        //   USAGE_PAGE (Button)
 	0x19, 0x01,        //   USAGE_MINIMUM (Button 1)
-	0x29, 8 * BUTTON_ARRAY_LENGTH,        //   USAGE_MAXIMUM (Button 144)
+	0x29, 8 * BUTTON_ARRAY_LENGTH,        //   USAGE_MAXIMUM (Button 32)
 	0x81, 0x02,        //   INPUT (Data,Var,Abs)
-//	0x95, 0x02,        //   REPORT_COUNT (3) // Padding
-//	0x81, 0x01,        //   INPUT (Cnst,Ary,Abs)
 	0x05, 0x01,        //   USAGE_PAGE (Generic Desktop)
 	0x25, 0x07,        //   LOGICAL_MAXIMUM (7)
 	0x46, 0x3b, 0x01,  //   PHYSICAL_MAXIMUM (315)
@@ -156,15 +154,17 @@ static const uint8_t PROGMEM gamepad_hid_report_desc[] = {
 	0x65, 0x00,        //   UNIT (None)
 	0x95, 0x01,        //   REPORT_COUNT (1)
 	0x81, 0x01,        //   INPUT (Cnst,Ary,Abs)
-	0x26, 0xff, 0x00,  //   LOGICAL_MAXIMUM (255)
-	0x46, 0xff, 0x00,  //   PHYSICAL_MAXIMUM (255)
+	0x16, 0x00, 0x00,  //   LOGICAL_MINIMUM 0
+	0x26, 0xff, 0x03,  //   LOGICAL_MAXIMUM (1024)
+	0x36, 0x00, 0x00,  //   PHYSICAL_MINIMUM (0)
+	0x46, 0xff, 0x03,  //   PHYSICAL_MAXIMUM (1024)
 	0x09, 0x30,        //   USAGE (X)
 	0x09, 0x31,        //   USAGE (Y)
 	0x09, 0x32,        //   USAGE (Z)
 	0x09, 0x33,		   //   USAGE (Rx)
 	0x09, 0x34,		   //   USAGE (Ry)
 	0x09, 0x35,        //   USAGE (Rz)
-	0x75, 0x08,        //   REPORT_SIZE (8)
+	0x75, 0x10,        //   REPORT_SIZE (16)
 	0x95, 0x06,        //   REPORT_COUNT (6)
 	0x81, 0x02,        //   INPUT (Data,Var,Abs)
 	0x06, 0x00, 0xff,  //   USAGE_PAGE (Vendor Specific)
@@ -180,6 +180,7 @@ static const uint8_t PROGMEM gamepad_hid_report_desc[] = {
 	0x09, 0x29,        //   Unknown
 	0x09, 0x2a,        //   Unknown
 	0x09, 0x2b,        //   Unknown
+	0x75, 0x08,        //   REPORT_SIZE (8) NEW
 	0x95, 0x0c,        //   REPORT_COUNT (12)
 	0x81, 0x02,        //   INPUT (Data,Var,Abs)
 	0x0a, 0x21, 0x26,  //   Unknown
@@ -202,8 +203,6 @@ static const uint8_t PROGMEM gamepad_hid_report_desc[] = {
 	0x19, 0x01,        //   USAGE_MINIMUM (Button 1)
 	0x29, 8 * BUTTON_ARRAY_LENGTH,        //   USAGE_MAXIMUM (Button 144)
 	0x81, 0x02,        //   INPUT (Data,Var,Abs)
-	//	0x95, 0x02,        //   REPORT_COUNT (3) // Padding
-	//	0x81, 0x01,        //   INPUT (Cnst,Ary,Abs)
 	0x05, 0x01,        //   USAGE_PAGE (Generic Desktop)
 	0x25, 0x07,        //   LOGICAL_MAXIMUM (7)
 	0x46, 0x3b, 0x01,  //   PHYSICAL_MAXIMUM (315)
@@ -215,15 +214,17 @@ static const uint8_t PROGMEM gamepad_hid_report_desc[] = {
 	0x65, 0x00,        //   UNIT (None)
 	0x95, 0x01,        //   REPORT_COUNT (1)
 	0x81, 0x01,        //   INPUT (Cnst,Ary,Abs)
-	0x26, 0xff, 0x00,  //   LOGICAL_MAXIMUM (255)
-	0x46, 0xff, 0x00,  //   PHYSICAL_MAXIMUM (255)
+	0x16, 0x00, 0x00,  //   LOGICAL_MINIMUM 0
+	0x26, 0xff, 0x03,  //   LOGICAL_MAXIMUM (1024)
+	0x36, 0x00, 0x00,  //   PHYSICAL_MINIMUM (0)
+	0x46, 0xff, 0x03,  //   PHYSICAL_MAXIMUM (1024)
 	0x09, 0x30,        //   USAGE (X)
 	0x09, 0x31,        //   USAGE (Y)
 	0x09, 0x32,        //   USAGE (Z)
 	0x09, 0x33,		   //   USAGE (Rx)
 	0x09, 0x34,		   //   USAGE (Ry)
 	0x09, 0x35,        //   USAGE (Rz)
-	0x75, 0x08,        //   REPORT_SIZE (8)
+	0x75, 0x10,        //   REPORT_SIZE (16)
 	0x95, 0x06,        //   REPORT_COUNT (6)
 	0x81, 0x02,        //   INPUT (Data,Var,Abs)
 	0x06, 0x00, 0xff,  //   USAGE_PAGE (Vendor Specific)
@@ -239,12 +240,14 @@ static const uint8_t PROGMEM gamepad_hid_report_desc[] = {
 	0x09, 0x29,        //   Unknown
 	0x09, 0x2a,        //   Unknown
 	0x09, 0x2b,        //   Unknown
+	0x75, 0x08,        //   REPORT_SIZE (8) NEW
 	0x95, 0x0c,        //   REPORT_COUNT (12)
 	0x81, 0x02,        //   INPUT (Data,Var,Abs)
 	0x0a, 0x21, 0x26,  //   Unknown
 	0x95, 0x08,        //   REPORT_COUNT (8)
 	0xb1, 0x02,        //   FEATURE (Data,Var,Abs)
 	0xc0,              // END_COLLECTION
+
 };
 
 
@@ -547,7 +550,37 @@ int8_t sendControllerDataViaUSB(dataForMegaController_t btnList, uint8_t playerI
 
 
 	// left and right analog sticks, 0x00 left/up, 0x80 middle, 0xff right/down
+	// Sanity check the inputs so we don't try and go out of bounds
+	int16_t stickMin = 0;
+	int16_t stickMax = 1023;
+	if (btnList.leftStickX < stickMin)
+		btnList.leftStickX = stickMin;
+	if (btnList.leftStickX > stickMax)
+		btnList.leftStickX = stickMax;
+	if (btnList.leftStickY < stickMin)
+		btnList.leftStickY = stickMin;
+	if (btnList.leftStickY > stickMax)
+		btnList.leftStickY = stickMax;
 
+	if (btnList.rightStickX < stickMin)
+		btnList.rightStickX = stickMin;
+	if (btnList.rightStickX > stickMax)
+		btnList.rightStickX = stickMax;
+	if (btnList.rightStickY < stickMin)
+		btnList.rightStickY = stickMin;
+	if (btnList.rightStickY > stickMax)
+		btnList.rightStickY = stickMax;
+
+	if (btnList.stick3X < stickMin)
+		btnList.stick3X = stickMin;
+	if (btnList.stick3X > stickMax)
+		btnList.stick3X = stickMax;
+	if (btnList.stick3Y < stickMin)
+		btnList.stick3Y = stickMin;
+	if (btnList.stick3Y > stickMax)
+		btnList.stick3Y = stickMax;
+
+	
 	usbControllerState.l_x_axis = btnList.leftStickX;
 	usbControllerState.l_y_axis = btnList.leftStickY;
 	usbControllerState.r_x_axis = btnList.rightStickX;
