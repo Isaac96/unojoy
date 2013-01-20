@@ -43,11 +43,11 @@ megaJoyControllerData_t getControllerData(void){
   //  lose the 2 least significant bits and get an
   //  8 bit number that we can use 
   controllerData.analogAxisArray[0] = analogRead(A0);
-  controllerData.analogAxisArray[1] = 0;//analogRead(A1); 
-  controllerData.analogAxisArray[2] = 1;//analogRead(A2); 
-  controllerData.analogAxisArray[3] = 512;//analogRead(A3); 
-  controllerData.analogAxisArray[4] = 1023;//analogRead(A4); 
-  controllerData.analogAxisArray[5] = 1000;//analogRead(A5); 
+  controllerData.analogAxisArray[1] = analogRead(A1);
+  controllerData.analogAxisArray[2] = analogRead(A2); 
+  controllerData.analogAxisArray[3] = analogRead(A3); 
+  controllerData.analogAxisArray[4] = analogRead(A4); 
+  controllerData.analogAxisArray[5] = analogRead(A5); 
   controllerData.analogAxisArray[6] = analogRead(A6); 
   controllerData.analogAxisArray[7] = analogRead(A7); 
   controllerData.analogAxisArray[8] = analogRead(A8); 
