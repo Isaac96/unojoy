@@ -192,7 +192,7 @@
       serialCheckCounter = 0;
       // If there is incoming data stored in the Arduino serial buffer
       while (Serial.available() > 0) {
-        pinMode(13, OUTPUT);
+        //pinMode(13, OUTPUT);
         //digitalWrite(13, HIGH);
         // Get incoming byte from the ATmega8u2
         byte inByte = Serial.read();
