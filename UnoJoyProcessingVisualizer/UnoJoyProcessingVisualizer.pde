@@ -257,7 +257,7 @@ void draw() {
 //  up the program in case of a transmission error.
 int readSerialPort(int timeout, int defaultValue){
   while((SerialPort.available() == 0) && (timeout > 0)){
-    //timeout--;
+    timeout--;
     delay(1);
   }
   if (timeout <= 0)
