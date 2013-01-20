@@ -131,6 +131,20 @@ void LEDoff(char ledNumber){
 	PORTD |= 1 << ledNumber;
 }
 
+// Get a 16 bit value off the serial port by doing two successive reads
+//  Assumes that data is being transmitted high byte first
+int16_t get16bitValue(int serialIndex){
+	int16_t returnValue = 0;
+	serialWrite(serialIndex);
+	serialIndex++;
+	returnValue = serialRead(25);
+	
+	serialWrite(serialIndex);
+	serialIndex++;
+	returnValue += serialRead(25) << 8;	
+	return returnValue;
+}
+
 int main(void) {
 	// Make sure our watchdog timer is disabled!
 	wdt_reset(); 
@@ -158,7 +172,8 @@ int main(void) {
 	// This wait also gives the Arduino bootloader time to timeout,
 	//  so the serial data you'll be properly aligned.
 	_delay_ms(500);
-	dataForMegaController_t dataToSend;
+	dataForMegaController_t controllerData1;
+	dataForMegaController_t controllerData2;
 
 	while (1) {
 		// Delay so we're not going too fast
@@ -173,43 +188,64 @@ int main(void) {
 		LEDon(TXLED);
 		flushSerialRead();
 		
+		int serialIndex = 0;
+		// The buttons are held in an array, so we need to break it between the two controllers
 		for (int i = 0; i < BUTTON_ARRAY_LENGTH; i++){
-			serialWrite(i);
-			dataToSend.buttonArray[i] = serialRead(25);	
+			serialWrite(serialIndex);
+			serialIndex++;
+			controllerData1.buttonArray[i] = serialRead(25);	
 		}
 		
-		serialWrite(BUTTON_ARRAY_LENGTH);
+		for (int i = 0; i < BUTTON_ARRAY_LENGTH; i++){
+			serialWrite(serialIndex);
+			serialIndex++;
+			controllerData2.buttonArray[i] = serialRead(25);
+		}
+		
+		serialWrite(serialIndex);
+		serialIndex++;
 		uint8_t directionButtons = serialRead(25);
-		//dataToSend.dpadDownOn = 
+		controllerData1.dpadLeftOn = 1 & (directionButtons >> 0);
+		controllerData1.dpadUpOn = 1 & (directionButtons >> 1);
+		controllerData1.dpadRightOn = 1 & (directionButtons >> 2);
+		controllerData1.dpadDownOn = 1 & (directionButtons >> 3);
 		
-		serialWrite(BUTTON_ARRAY_LENGTH + 1);
-		dataToSend.leftStickX = serialRead(25);
-        
-		serialWrite(BUTTON_ARRAY_LENGTH + 2);
-		dataToSend.leftStickY = serialRead(25);
-        
-		serialWrite(BUTTON_ARRAY_LENGTH + 3);
-		dataToSend.rightStickX = serialRead(25);
-        
-		serialWrite(BUTTON_ARRAY_LENGTH + 4);
-		dataToSend.rightStickY= serialRead(25);
+		controllerData2.dpadLeftOn = 1 & (directionButtons >> 4);
+		controllerData2.dpadUpOn = 1 & (directionButtons >> 5);
+		controllerData2.dpadRightOn = 1 & (directionButtons >> 6);
+		controllerData2.dpadDownOn = 1 & (directionButtons >> 7);
 		
-		// FIX THESE LATER TO ACTUALLY READ IN THE DATA
-		serialWrite(BUTTON_ARRAY_LENGTH + 5);
-		dataToSend.stick3X= serialRead(25);
+		// Assuming that 16 bit data gets sent high byte first
+		controllerData1.leftStickX = get16bitValue(serialIndex);
+		serialIndex += 2;
+		controllerData1.leftStickY = get16bitValue(serialIndex);
+		serialIndex += 2;
+		controllerData1.rightStickX = get16bitValue(serialIndex);
+		serialIndex += 2;
+		controllerData1.rightStickY = get16bitValue(serialIndex);
+		serialIndex += 2;
+		controllerData1.stick3X = get16bitValue(serialIndex);
+		serialIndex += 2;
+		controllerData1.stick3Y = get16bitValue(serialIndex);
+		serialIndex += 2;
 		
-		serialWrite(BUTTON_ARRAY_LENGTH + 6);
-		dataToSend.stick3Y= serialRead(25);
+		controllerData2.leftStickX = get16bitValue(serialIndex);
+		serialIndex += 2;
+		controllerData2.leftStickY = get16bitValue(serialIndex);
+		serialIndex += 2;
+		controllerData2.rightStickX = get16bitValue(serialIndex);
+		serialIndex += 2;
+		controllerData2.rightStickY = get16bitValue(serialIndex);
+		serialIndex += 2;
+		controllerData2.stick3X = get16bitValue(serialIndex);
+		serialIndex += 2;
+		controllerData2.stick3Y = get16bitValue(serialIndex);
 		
 		// Communication with the Arduino chip is over here
 		LEDoff(TXLED);	
-        dataToSend.dpadUpOn = 0;
-        dataToSend.dpadDownOn = 0;
-        dataToSend.dpadLeftOn = 0;
-        dataToSend.dpadRightOn = 0;
         // Finally, we send the data out via the USB port
-		sendControllerDataViaUSB(dataToSend, 1);	
+		sendControllerDataViaUSB(controllerData1, 1);	
 		_delay_ms(10);
-		sendControllerDataViaUSB(dataToSend, 2);
+		sendControllerDataViaUSB(controllerData2, 2);
 	}
 }

@@ -144,7 +144,7 @@
   //  and the timer interrupt for actually sending the data back and forth.
   void setupMegaJoy(void){
     // First, let's zero out our controller data buffer (center the sticks)
-    controllerDataBuffer = getBlankDataForController();
+    controllerDataBuffer = getBlankDataForMegaController();
   
     // Start the serial port at the specific, low-error rate UnoJoy uses.
     //  If you want to change the rate, you'll have to change it in the
@@ -213,10 +213,10 @@
     controllerData.dpad1DownOn = 0;  
     
     //Set the sticks to 512 - centered
-    for (int i = 0; i < ANALOG_AXIS_ARRAY_SIZE; i++{
+    for (int i = 0; i < ANALOG_AXIS_ARRAY_SIZE; i++){
       controllerData.analogAxisArray[i] = 512;
     }    
-    // And return the data!
+    // And return the data! 
     return controllerData;
   }
 

@@ -17,7 +17,6 @@
 
 	typedef struct dataForMegaController_t
 	{
-		uint8_t id;
 		// We'll support 144 buttons
 		//  DirectInput supports up to 150, but this is a nice round number?
 		uint8_t buttonArray[BUTTON_ARRAY_LENGTH];
