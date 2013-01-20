@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectVersion>1.0</ProjectVersion>
+    <ProjectVersion>5.0</ProjectVersion>
     <ProjectGuid>{6974e705-4dba-49ab-8ab5-42ea03cd49c4}</ProjectGuid>
     <avrdevice>ATmega8U2</avrdevice>
     <avrdeviceseries>none</avrdeviceseries>
@@ -14,6 +14,10 @@
     <Name>UnoJoy</Name>
     <RootNamespace>VersatilityUSB</RootNamespace>
     <avrtool />
+    <OutputType>Executable</OutputType>
+    <Language>C</Language>
+    <ToolchainName>com.Atmel.AVRGCC8</ToolchainName>
+    <UseGlobalToolchain>True</UseGlobalToolchain>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>

@@ -129,12 +129,26 @@ void getControllerData(void){
   ControllerData.dpadUpOn = readPin(UP_PIN, ControllerData.dpadUpOn);
   ControllerData.dpadLeftOn = readPin(LEFT_PIN, ControllerData.dpadLeftOn);
   ControllerData.dpadRightOn = readPin(RIGHT_PIN, ControllerData.dpadRightOn);
+  
+  ControllerData.leftStickY = 128;
+  ControllerData.leftStickX = 128;
+  
+  if (ControllerData.dpadDownOn == 1)
+    ControllerData.leftStickY = 245;
+  if (ControllerData.dpadUpOn == 1)
+    ControllerData.leftStickY = 10;
+  if (ControllerData.dpadLeftOn == 1)
+    ControllerData.leftStickX = 10;
+  if (ControllerData.dpadRightOn == 1)
+    ControllerData.leftStickX = 245;
+    
   ControllerData.circleOn = readPin(CIRCLE_PIN, ControllerData.circleOn);
   ControllerData.crossOn = readPin(CROSS_PIN, ControllerData.crossOn);
   ControllerData.triangleOn = readPin(TRIANGLE_PIN, ControllerData.triangleOn);
   ControllerData.squareOn = readPin(SQUARE_PIN, ControllerData.squareOn);
   ControllerData.l1On = readPin(L1_PIN, ControllerData.l1On);
   ControllerData.r1On = readPin(R1_PIN, ControllerData.r1On);
+  
   
   return;
 }

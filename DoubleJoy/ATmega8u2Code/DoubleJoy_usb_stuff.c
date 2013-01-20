@@ -347,7 +347,7 @@ static struct descriptor_list_struct {
 static volatile uint8_t usb_configuration = 0;
 
 static gamepad_state_t PROGMEM gamepad_0_idle_state = {
-	.id = 1,
+	.id = GAMEPAD_0_REPORT_ID,
 	.triangle_btn = 0, .square_btn = 0, .cross_btn = 0, .circle_btn = 0,
 	.l1_btn = 0, .r1_btn = 0, .l2_btn = 0, .r2_btn = 0,
 	.select_btn = 0, .start_btn = 0, .l3_btn = 0, .r3_btn = 0, .ps_btn = 0,
@@ -359,7 +359,7 @@ static gamepad_state_t PROGMEM gamepad_0_idle_state = {
 };
 
 static gamepad_state_t PROGMEM gamepad_1_idle_state = {
-	.id = 2,
+	.id = GAMEPAD_1_REPORT_ID,
 	.triangle_btn = 0, .square_btn = 0, .cross_btn = 0, .circle_btn = 0,
 	.l1_btn = 0, .r1_btn = 0, .l2_btn = 0, .r2_btn = 0,
 	.select_btn = 0, .start_btn = 0, .l3_btn = 0, .r3_btn = 0, .ps_btn = 0,

@@ -2,7 +2,6 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
--include ../makefile.init
 SHELL := cmd.exe
 RM := rm -rf
 
@@ -25,17 +24,10 @@ C_DEPS_AS_ARGS :=
 EXECUTABLES := 
 OUTPUT_FILE_PATH :=
 OUTPUT_FILE_PATH_AS_ARGS :=
-HEX_FLASH_FILE_PATH :=
-HEX_FLASH_FILE_PATH_AS_ARGS :=
-HEX_EEPROM_FILE_PATH :=
-HEX_EEPROM_FILE_PATH_AS_ARGS :=
-LSS_FILE_PATH :=
-LSS_FILE_PATH_AS_ARGS :=
-MAP_FILE_PATH :=
-MAP_FILE_PATH_AS_ARGS :=
-AVR_APP_PATH :=C:/Program Files (x86)/Atmel/AVR Studio 5.0/extensions/Application/Avr ToolChain/bin/
+AVR_APP_PATH :=$$$AVR_APP_PATH$$$
 QUOTE := "
 ADDITIONAL_DEPENDENCIES:=
+OUTPUT_FILE_DEP:=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := 
@@ -77,39 +69,29 @@ OUTPUT_FILE_PATH +=DoubleJoy.elf
 
 OUTPUT_FILE_PATH_AS_ARGS +=DoubleJoy.elf
 
-HEX_FLASH_FILE_PATH +=DoubleJoy.hex
+ADDITIONAL_DEPENDENCIES:=
 
-HEX_FLASH_FILE_PATH_AS_ARGS +=DoubleJoy.hex
+OUTPUT_FILE_DEP:= ./makedep.mk
 
-HEX_EEPROM_FILE_PATH +=DoubleJoy.eep
-
-HEX_EEPROM_FILE_PATH_AS_ARGS +=DoubleJoy.eep
-
-LSS_FILE_PATH +=DoubleJoy.lss
-
-LSS_FILE_PATH_AS_ARGS +=DoubleJoy.lss
-
-MAP_FILE_PATH =DoubleJoy.map
-
-MAP_FILE_PATH_AS_ARGS =DoubleJoy.map
-
-ADDITIONAL_DEPENDENCIES:= $(HEX_FLASH_FILE_PATH) size
-
-# AVR/GNU C Compiler
+# AVR32/GNU C Compiler
 
 
 
 
 
-./%.o: .././%.c ../DoubleJoy.avrgccproj
+./%.o: .././%.c
 	@echo Building file: $<
-	@echo Invoking: AVR/GNU C Compiler
-	$(QUOTE)$(AVR_APP_PATH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DF_CPU=16000000UL  -Os -fpack-struct -fshort-enums -g2 -Wall -c --std=gnu99  -mmcu=atmega8u2   -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
+	@echo Invoking: AVR/GNU C Compiler : (AVR_8_bit_GNU_Toolchain_3.4.0_663) 4.6.2
+	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Studio 6.0\extensions\Atmel\AVRGCC\3.4.0.65\AVRToolchain\bin\avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DF_CPU=16000000UL  -Os -fpack-struct -fshort-enums -g2 -Wall -c --std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -mmcu=atmega8u2   -o"$@" "$<" 
 	@echo Finished building: $<
 
 
 
-# AVR/GNU Assembler
+# AVR32/GNU Preprocessing Assembler
+
+
+
+# AVR32/GNU Assembler
 
 
 
@@ -120,39 +102,28 @@ ifneq ($(strip $(C_DEPS)),)
 endif
 endif
 
--include ../makefile.defs
-
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
 all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 
-# AVR/GNU C Linker
-$(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS)
+$(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP)
 	@echo Building target: $@
-	@echo Invoking: AVR/GNU C Linker
-	$(QUOTE)$(AVR_APP_PATH)avr-gcc.exe$(QUOTE)  -mmcu=atmega8u2   -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS)
+	@echo Invoking: AVR/GNU Linker : (AVR_8_bit_GNU_Toolchain_3.4.0_663) 4.6.2
+	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Studio 6.0\extensions\Atmel\AVRGCC\3.4.0.65\AVRToolchain\bin\avr-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="DoubleJoy.map" -Wl,--start-group -Wl,-lm  -Wl,--end-group  -mmcu=atmega8u2  
 	@echo Finished building target: $@
+	"C:\Program Files (x86)\Atmel\Atmel Studio 6.0\extensions\Atmel\AVRGCC\3.4.0.65\AVRToolchain\bin\avr-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature  "DoubleJoy.elf" "DoubleJoy.hex"
+	"C:\Program Files (x86)\Atmel\Atmel Studio 6.0\extensions\Atmel\AVRGCC\3.4.0.65\AVRToolchain\bin\avr-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "DoubleJoy.elf" "DoubleJoy.eep" || exit 0
+	"C:\Program Files (x86)\Atmel\Atmel Studio 6.0\extensions\Atmel\AVRGCC\3.4.0.65\AVRToolchain\bin\avr-objdump.exe" -h -S "DoubleJoy.elf" > "DoubleJoy.lss"
+	"C:\Program Files (x86)\Atmel\Atmel Studio 6.0\extensions\Atmel\AVRGCC\3.4.0.65\AVRToolchain\bin\avr-size.exe" "DoubleJoy.elf"
+	
 
 
 
-$(HEX_FLASH_FILE_PATH): $(OUTPUT_FILE_PATH)
-	$(QUOTE)$(AVR_APP_PATH)avr-objcopy.exe$(QUOTE) -O ihex -R .eeprom -R .fuse -R .lock -R .signature  $(QUOTE)$<$(QUOTE) $(QUOTE)$@$(QUOTE)
 
-$(HEX_EEPROM_FILE_PATH): $(OUTPUT_FILE_PATH)
-	-$(QUOTE)$(AVR_APP_PATH)avr-objcopy.exe$(QUOTE) -j .eeprom --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0 --no-change-warnings -O ihex $(QUOTE)$<$(QUOTE) $(QUOTE)$@$(QUOTE) || exit 0
-
-$(LSS_FILE_PATH): $(OUTPUT_FILE_PATH)
-	$(QUOTE)$(AVR_APP_PATH)avr-objdump.exe$(QUOTE) -h -S $(QUOTE)$<$(QUOTE) > $(QUOTE)$@$(QUOTE)
-
-size: $(OUTPUT_FILE_PATH)
-	@$(QUOTE)$(AVR_APP_PATH)avr-size.exe$(QUOTE) -C --mcu=atmega8u2 $(OUTPUT_FILE_PATH_AS_ARGS)
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS_AS_ARGS)$(C_DEPS_AS_ARGS) $(QUOTE)$(EXECUTABLES)$(QUOTE) $(OUTPUT_FILE_PATH_AS_ARGS) $(HEX_FLASH_FILE_PATH_AS_ARGS) $(HEX_EEPROM_FILE_PATH_AS_ARGS) $(LSS_FILE_PATH_AS_ARGS) $(MAP_FILE_PATH_AS_ARGS)
-
-.PHONY: all clean dependents
-.SECONDARY:
-
--include ../makefile.targets
+	-$(RM) $(OBJS_AS_ARGS)$(C_DEPS_AS_ARGS) $(EXECUTABLES) 
+	rm -rf "DoubleJoy.elf" "DoubleJoy.a" "DoubleJoy.hex" "DoubleJoy.lss" "DoubleJoy.eep" "DoubleJoy.map"
+	
